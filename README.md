@@ -1,0 +1,1 @@
+# StewartPlatformSingularities_py
