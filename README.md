@@ -13,7 +13,7 @@ This notebook offers a set of tools and techniques to identify poses that lie on
 
 **Singularities Plane**
 
-<img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/FixingPos.png" width="400"> <img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/FixingOr.png" width="400">
+<img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/PlotPos.png" width="400"> <img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/PlotOr.png" width="400">
 
 ## Table of Contents
 
