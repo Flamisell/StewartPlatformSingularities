@@ -7,7 +7,13 @@ Singularities are determined by the Jacobian matrix of the platform, which in tu
 
 This notebook offers a set of tools and techniques to identify poses that lie on singularity planes. Once the singular poses are identified, it becomes possible to find the nearest singular configuration for a given platform pose and visualize the singularity planes within the workspace, assuming a fixed orientation or position.
 
-<img src="https://github.com/Flamisell/StewartPlatform_py/blob/main/img/newplot.png" width="400"> <img src="https://github.com/Flamisell/StewartPlatform_py/blob/main/img/newplot%20(1).png" width="400">
+**Closest Singularity**
+
+<img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/stewart1.png" width="400"> <img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/Stewart22.png" width="450">
+
+**Singularities Plane**
+
+<img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/FixingPos.png" width="400"> <img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/FixingOr.png" width="400">
 
 ## Table of Contents
 
@@ -15,13 +21,10 @@ This notebook offers a set of tools and techniques to identify poses that lie on
 - [Usage](#usage)
   - [Singularity Search](#singularity-search)
     - [Platform Initialization](#platform-initialization)
-    - [Find Singularities]()
-    - [Filter Singularities]()
-  - [Kinematic Analysis](#kinematic-analysis)
-  - [Force Analysis](#force-analysis)
-  - [Workspace Analysis](#workspace-analysis)
-  - [Singularity Finder](#singularity-finder)
-- [Methods Overview](#methods-overview)
+    - [Find Singularities](find-singularities)
+    - [Filter Singularities](filter-singularities)
+  - [Closest Singularity Search and Visualization](#closest-singularity-search-and-visualization)
+- [Class Methods Overview](#class-methods-overview)
 
 ## Installation
 
@@ -85,7 +88,6 @@ Holder=platform.getSingularityWorkspace(workspace_limits,orientation_limits,N_po
 ```
 Save the singularities onto drive for safety.
 ```
-# save the whole txt
  with open('/content/drive/My Drive/Github/singularities_2.txt', 'w') as f:
      np.savetxt(f, Holder)
 ```
@@ -209,6 +211,9 @@ print("closest singularity :", closest_vector)
 print("local condition number T :", k)
 print("joint_forces :", joint_forces)
 ```
+<img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/stewart1.png" width="400"> <img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/Stewart22.png" width="450">
+
+
 It is possible to plot 3d the singularity planes as long as we fix either position or orientation.
 We can use plotly libraries to clearly see the planes. I will leave the code directly in the colab file.
 ```
@@ -229,7 +234,7 @@ roll_min, roll_max, pitch_min, pitch_max, yaw_min, yaw_max = orientation_limits
 # use the getIndexWorkspaceOrientation function to see how the local condition index changes when orienting the platform
 workspace_indices_orientation = platform.getIndexWorkspaceOrientation(position, orientation_limits, N, choice)
 ```
-<img src="https://github.com/Flamisell/StewartPlatform_py/blob/main/img/newplot.png" width="400"> <img src="https://github.com/Flamisell/StewartPlatform_py/blob/main/img/newplot%20(1).png" width="400">
+<img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/FixingPos.png" width="400">
 
 **Fixing Orientation**
 ```
@@ -243,8 +248,7 @@ x_min, x_max, y_min, y_max, z_min, z_max = workspace_limits
 # use the getIndexWorkspacePosition function to see how the local condition index changes when positioning the platform
 workspace_indices_position = platform.getIndexWorkspacePosition(orientation, workspace_limits, N, choice)
 ```
-<img src="https://github.com/Flamisell/StewartPlatform_py/blob/main/img/newplot.png" width="400"> <img src="https://github.com/Flamisell/StewartPlatform_py/blob/main/img/newplot%20(1).png" width="400">
-
+<img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/FixingOr.png" width="400">
 
 ## Class Methods Overview
 - **getIK(pose):** Computes inverse kinematics.
