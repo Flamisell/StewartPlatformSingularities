@@ -30,7 +30,7 @@ This notebook offers a set of tools and techniques to identify poses that lie on
 
 Ensure you have the required libraries:
 
-```bash
+```python
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 import matplotlib.pyplot as plt
@@ -55,7 +55,7 @@ To create an instance of the StewartPlatform class, you need to provide the foll
 - phi_p: Angle between platform joints.
 
 It is also important to define limits on workspace position and orientation, this limits will define the boundaries of the search.
-```
+```python
 # Define parameters
 r_b = 0.5  # Radius of base
 phi_b = 50  # Angle between base joints
@@ -75,24 +75,24 @@ x_min, x_max, y_min, y_max, z_min, z_max = workspace_limits
 roll_min, roll_max, pitch_min, pitch_max, yaw_min, yaw_max = orientation_limits
 ```
 Mount the drive
-```
+```python
 from google.colab import drive
 drive.mount('/content/drive')
 ```
 #### Find Singularities
 Use *getSingularityWorkspace* to search for any pose which has a low local condition index. Note: this can be computationally expensive.
-```
+```python
 N_pos=10 # Discretization for workspace coordinates
 N_orient=10 # Discretization for orientation coordinates
 Holder=platform.getSingularityWorkspace(workspace_limits,orientation_limits,N_pos,N_orient) # find singularities in all space
 ```
 Save the singularities onto drive for safety.
-```
+```python
  with open('/content/drive/My Drive/Github/singularities_2.txt', 'w') as f:
      np.savetxt(f, Holder)
 ```
 Load the whole singularity file.
-```
+```python
 with open('/content/drive/My Drive/Github/singularities_2.txt', 'r') as f:
     singularities = np.loadtxt(f)
 ```
@@ -100,7 +100,7 @@ with open('/content/drive/My Drive/Github/singularities_2.txt', 'r') as f:
 *First Filtering*
 
 Slicing the matrix, removing the borders of the workspace (external singularities) and selecting only the poses with low local condition index.
-```
+```python
 keep_mask = (singularities[:, 6] < 0.001) & (singularities[:, 2] > z_min)& (singularities[:, 2] < z_max) & (singularities[:, 0] < x_max)& (singularities[:, 0] > x_min)& (singularities[:, 1] < y_max) & (singularities[:, 1] > y_min)
 interest_points_with_index=singularities[keep_mask]
 ```
@@ -108,7 +108,7 @@ interest_points_with_index=singularities[keep_mask]
 
 We normalize the singularities between the borders of the workspace, we then calculate the distance matrix between all of them and remove the configurations which are too close to each other.
 
-```
+```python
 from scipy.spatial.distance import cdist
 
 # take only poses
@@ -141,7 +141,7 @@ interest_points_filtered=interest_points_holder[keep_mask] # kept singularities
 interest_points_deleted=interest_points_holder[~keep_mask] # removed singularities
 ```
 Save singularities in task space and in joint space.
-```
+```python
 # Save the filtered singularities as task singularities
 singularities_task_space=np.copy(interest_points_filtered[:,:6])
 with open('/content/drive/My Drive/Github/filtered_singularities_task_space_2.txt', 'w') as f:
@@ -158,7 +158,7 @@ with open('/content/drive/My Drive/Github/filtered_singularities_joint_space_2.t
 In this section is shown how to search for the closest singularity given a configuration of the platform and how to visualize the singularity space in both position and orientation space. Note: stewart platform's singularities live in R6, to visualize them we need to fix either position or orientation of the platform.
 
 Load singularities from the drive
-```
+```python
 with open('/content/drive/My Drive/Github/filtered_singularities_task_space_2.txt', 'r') as f:
     singularities_task_space = np.loadtxt(f)
 
@@ -168,7 +168,7 @@ with open('/content/drive/My Drive/Github/filtered_singularities_joint_space_2.t
 Find the closest singularity to defined position.
 
 Check local condition index and the actuator forces in pose and singularity.
-```
+```python
 # find the closest singularity.
 pose=np.array([0,0.35,0.2,0,0,0])
 mins=np.array([x_min,y_min,z_min,roll_min,pitch_min,yaw_min])
@@ -216,13 +216,13 @@ print("joint_forces :", joint_forces)
 
 It is possible to plot 3d the singularity planes as long as we fix either position or orientation.
 We can use plotly libraries to clearly see the planes. I will leave the code directly in the colab file.
-```
+```python
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 ```
 **Fixing Position**
-```
+```python
 # Choose a position
 position = np.array([-0.45,0.1,0.2])
 
@@ -237,7 +237,7 @@ workspace_indices_orientation = platform.getIndexWorkspaceOrientation(position, 
 <img src="https://github.com/Flamisell/StewartPlatformSingularities_py/blob/main/img/FixingPos.png" width="400">
 
 **Fixing Orientation**
-```
+```python
 # Choose an orientation
 orientation = np.array([8,7,5]) # RPY
 N=10 # discretization of space
